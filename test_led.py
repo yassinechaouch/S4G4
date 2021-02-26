@@ -1,14 +1,17 @@
 import RPi.GPIO as GPIO
-from time import sleep
+from gpiozero import LED
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(8, GPIO.OUT , initial=GPIO.LOW)
+sensor = 10
+led = LED(8)
+GPIO.setup(sensor, GPIO.IN , initial=GPIO.LOW)
+
 
 while True:
-    GPIO.output(8,GPIO.HIGH)
-    sleep(2)
-    GPIO.output(8,GPIO.LOW)
-    sleep(2)
+    if GPIO.input(sensor)
+        led.on()
+    else:
+        led.off()
 
