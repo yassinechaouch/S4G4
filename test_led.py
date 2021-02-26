@@ -6,7 +6,7 @@ GPIO.setmode(GPIO.BOARD)
 
 sensor = 10
 led = LED(8)
-GPIO.setup(sensor, GPIO.IN , initial=GPIO.LOW)
+GPIO.setup(sensor, GPIO.IN)
 
 
 while True:
