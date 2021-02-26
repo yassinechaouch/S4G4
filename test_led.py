@@ -10,7 +10,7 @@ GPIO.setup(sensor, GPIO.IN , initial=GPIO.LOW)
 
 
 while True:
-    if GPIO.input(sensor)
+    if GPIO.input(sensor):
         led.on()
     else:
         led.off()
