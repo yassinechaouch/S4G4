@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import audioplayer
+
 # pip install audioplayer or hover over audioplayer underlined then press on install package if needed!
 # for raspberry OS: sudo apt-get install python-gst-1.0 \
 #                      gir1.2-gstreamer-1.0 \
@@ -15,19 +16,17 @@ GPIO.setmode(GPIO.BOARD)
 # Lezemna: Smoke sensor/ detector, 2 green led for ON + SAFE, 1 yellow led for INTERNET/APP/ZINA, 1 red led for ALARM.
 
 # Inputs:
-sensor = 8
+sensor = 16
 
 # Outputs:
-led_on = 10
-led_internet = 12
-led_alarm = 16
-led_safe = 18
+led_internet = 8
+led_alarm = 12
+led_safe = 10
 
 # Inputs setup:
 GPIO.setup(sensor, GPIO.IN)
 
 # Outputs setup:
-GPIO.setup(led_on, GPIO.OUT, initial=GPIO.HIGH)
 GPIO.setup(led_internet, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(led_alarm, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(led_safe, GPIO.OUT, initial=GPIO.HIGH)
