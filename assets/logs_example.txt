@@ -1,0 +1,3 @@
+Fire incident 1   Time   Location   Reason
+Fire incident 2   Time   Location   Reason
+Fire incident 3   Time   Location   Reason
