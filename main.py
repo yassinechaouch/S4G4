@@ -1,5 +1,8 @@
 import RPi.GPIO as GPIO
-import audioplayer
+from pushbullet import Pushbullet, InvalidKeyError
+from datetime import datetime
+from os import path
+import time
 
 # pip install audioplayer or hover over audioplayer underlined then press on install package if needed!
 # for raspberry OS: sudo apt-get install python-gst-1.0 \
@@ -13,44 +16,65 @@ import audioplayer
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
-# Lezemna: Smoke sensor/ detector, 2 green led for ON + SAFE, 1 yellow led for INTERNET/APP/ZINA, 1 red led for ALARM.
-
 # Inputs:
 sensor = 16
 
 # Outputs:
-led_internet = 8
+led_pushbullet = 8
 led_alarm = 12
 led_safe = 10
+buzzer = 24
 
 # Inputs setup:
 GPIO.setup(sensor, GPIO.IN)
 
 # Outputs setup:
-GPIO.setup(led_internet, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(led_pushbullet, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(led_alarm, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(led_safe, GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(buzzer,GPIO.OUT, initial=GPIO.LOW)
 
-# Assets setup:
-PLAYING = False
-ON = audioplayer.AudioPlayer("assets/ON.mp3")
-ALARM = audioplayer.AudioPlayer("assets/ALARM.mp3")
+# Additional setup:
+doThisOnce = False
+pbError = False
 
-# Before while loop, put the code to be executed ONCE, aka when opening the file.
-ON.play(block=True)
+# Start program
+try:
+    api_key = 'o.KQ4eSi8fZz6ym65RT16UyeVRaKq1rslv'
+    pb = Pushbullet(api_key)
+except InvalidKeyError:
+    print("Api Key is invalid")
+    pbError = True
 
-# While loop:
-while True:
+# While loop if there is an error connecting to pushbullet api:
+while pbError is True:
+    GPIO.output(led_pushbullet, GPIO.HIGH)
+    time.sleep(1)
+    GPIO.output(led_pushbullet, GPIO.LOW)
+    time.sleep(1)
+
+# While loop if there is no error connecting to pushbullet api:
+while pbError is False:
 
     if GPIO.input(sensor):
-        GPIO.output(led_alarm, GPIO.HIGH)
-        GPIO.output(led_safe, GPIO.LOW)
-        if PLAYING is False:
-            PLAYING = True
-            ALARM.play(loop=True)
+        if doThisOnce is False:
+            GPIO.output(led_alarm, GPIO.HIGH)
+            GPIO.output(led_safe, GPIO.LOW)
+            GPIO.output(buzzer, GPIO.HIGH)
+            pb.push_note("WARNING: FIRE WAS DETECTED!","")
+            # add line
+            doThisOnce = True
+
     else:
-        GPIO.output(led_alarm, GPIO.LOW)
-        GPIO.output(led_safe, GPIO.HIGH)
-        if PLAYING is True:
-            PLAYING = False
-            ALARM.stop()
+        if doThisOnce is True:
+            GPIO.output(led_alarm, GPIO.LOW)
+            GPIO.output(led_safe, GPIO.HIGH)
+            GPIO.output(buzzer, GPIO.LOW)
+            pb.push_note("FIRE IS UNDER CONTROL!", "")
+            # send file
+            doThisOnce = False
+
+    # if -------
+    #    send file
+# 1 add information lkel logs
+# 2 find condition => sendlogs()
