@@ -9,13 +9,7 @@ pb.push_note("WARNING: FIRE WAS DETECTED","")
 # Pushing file to user's phone:
 with open("assets/logs_example.txt", "rb") as log:
     file_data = pb.upload_file(log, "logs.txt")
-
-if path.exists("assets/logs_example.txt"):
-    print("exists")
-else:
-    print("doesnt exist")
-
-# push = pb.push_file(**file_data)
+push = pb.push_file(**file_data)
 # To delete pushes (all information sent) from user's phone:
 # pb.delete_pushes()
 # Or if file is already uploaded, then directly use pb.push.file(file url, file name, file type)

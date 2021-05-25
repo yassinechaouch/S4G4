@@ -1,17 +1,8 @@
 import RPi.GPIO as GPIO
 from pushbullet import Pushbullet, InvalidKeyError
 from datetime import datetime
-from os import path
+import log_manager
 import time
-
-# pip install audioplayer or hover over audioplayer underlined then press on install package if needed!
-# for raspberry OS: sudo apt-get install python-gst-1.0 \
-#                      gir1.2-gstreamer-1.0 \
-#                      gstreamer1.0-tools \
-#                      gir1.2-gst-plugins-base-1.0
-#                      gstreamer1.0-plugins-good \
-#                      gstreamer1.0-plugins-ugly
-# Documentation I found: https://pypi.org/project/audioplayer/#API
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
@@ -37,6 +28,10 @@ GPIO.setup(buzzer,GPIO.OUT, initial=GPIO.LOW)
 # Additional setup:
 doThisOnce = False
 pbError = False
+begin = 0
+end = 0
+duration = 0
+current_date_and_time = 0
 
 # Start program
 try:
@@ -61,8 +56,10 @@ while pbError is False:
             GPIO.output(led_alarm, GPIO.HIGH)
             GPIO.output(led_safe, GPIO.LOW)
             GPIO.output(buzzer, GPIO.HIGH)
+            begin = time.time()
+            now = datetime.now()
+            current_date_and_time = now.strftime("%d/%m/%Y %H:%M:%S")
             pb.push_note("WARNING: FIRE WAS DETECTED!","")
-            # add line
             doThisOnce = True
 
     else:
@@ -70,11 +67,9 @@ while pbError is False:
             GPIO.output(led_alarm, GPIO.LOW)
             GPIO.output(led_safe, GPIO.HIGH)
             GPIO.output(buzzer, GPIO.LOW)
+            end = time.time()
+            duration = end - begin
             pb.push_note("FIRE IS UNDER CONTROL!", "")
-            # send file
+            log_manager.add_line_to_file(current_date_and_time,duration)
+            log_manager.send_file(pb)
             doThisOnce = False
-
-    # if -------
-    #    send file
-# 1 add information lkel logs
-# 2 find condition => sendlogs()
