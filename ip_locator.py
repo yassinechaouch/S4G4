@@ -1,6 +1,5 @@
 from geolite2 import geolite2
 import requests
-import pygeoip
 
 def my_ip_location(my_ip):
     reader = geolite2.reader()
