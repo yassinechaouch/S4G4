@@ -23,7 +23,3 @@ def send_file(pb):
 # begin = time.time()
 # end = time.time()
 # datetime object containing current date and time
-now = datetime.now()
-dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-duration = 12
-add_line_to_file(dt_string,duration)

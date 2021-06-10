@@ -8,7 +8,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
 # Inputs:
-sensor = 16
+sensor = 13
 
 # Outputs:
 led_pushbullet = 8
@@ -20,9 +20,9 @@ buzzer = 24
 GPIO.setup(sensor, GPIO.IN)
 
 # Outputs setup:
-GPIO.setup(led_pushbullet, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(led_pushbullet, GPIO.OUT, initial=GPIO.HIGH)
 GPIO.setup(led_alarm, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(led_safe, GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(led_safe, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(buzzer,GPIO.OUT, initial=GPIO.LOW)
 
 # Additional setup:
@@ -32,14 +32,23 @@ begin = 0
 end = 0
 duration = 0
 current_date_and_time = 0
-
+counter = 0
 # Start program
+
+print("Initialize")
+time.sleep(15)
+print("Done")
+
 try:
-    api_key = 'o.KQ4eSi8fZz6ym65RT16UyeVRaKq1rslv'
+    api_key = 'o.VD9eRgkRKHauErawHzO8KN4qAWqXCysG'
     pb = Pushbullet(api_key)
 except InvalidKeyError:
     print("Api Key is invalid")
     pbError = True
+
+if pbError is False:
+    GPIO.output(led_pushbullet,GPIO.LOW)
+    GPIO.output(led_safe,GPIO.HIGH)
 
 # While loop if there is an error connecting to pushbullet api:
 while pbError is True:
@@ -50,9 +59,10 @@ while pbError is True:
 
 # While loop if there is no error connecting to pushbullet api:
 while pbError is False:
-
-    if GPIO.input(sensor):
+    time.sleep(0.2)
+    if not GPIO.input(sensor):
         if doThisOnce is False:
+            print("In")
             GPIO.output(led_alarm, GPIO.HIGH)
             GPIO.output(led_safe, GPIO.LOW)
             GPIO.output(buzzer, GPIO.HIGH)
@@ -63,9 +73,11 @@ while pbError is False:
             doThisOnce = True
 
     else:
+        print("Stand By")
+        GPIO.output(led_safe, GPIO.HIGH)
         if doThisOnce is True:
+            print("Out")
             GPIO.output(led_alarm, GPIO.LOW)
-            GPIO.output(led_safe, GPIO.HIGH)
             GPIO.output(buzzer, GPIO.LOW)
             end = time.time()
             duration = end - begin

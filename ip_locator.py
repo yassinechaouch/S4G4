@@ -6,7 +6,7 @@ def my_ip_location(my_ip):
     location = reader.get(my_ip)
 
     #geolite database dict values and fine tunning
-    a=(location['city']['names']['en'])
+    a=(location['country']['names']['en'])
     d=(location['location'])
 
     string = ("City: %s  |  Location: %s" % (a,d))

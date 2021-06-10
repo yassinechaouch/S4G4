@@ -1,1 +1,1 @@
-City: Aryanah  |  Location: {'accuracy_radius': 10, 'latitude': 36.8601, 'longitude': 10.1934, 'time_zone': 'Africa/Tunis'}  |  Current Time =25/05/2021 16:48:06  |  Duration = 12
+City: Tunisia  |  Location: {'accuracy_radius': 200, 'latitude': 34.0, 'longitude': 9.0, 'time_zone': 'Africa/Tunis'}  |  Current Time =10/06/2021 09:30:11  |  Duration = 4.2788732051849365
